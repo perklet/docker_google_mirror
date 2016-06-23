@@ -9,3 +9,23 @@ cd docker-google-mirror
 docker build -t google-mirror .
 docker run -d -p 80:80 google-mirror
 ```
+
+配置https
+
+1. 编辑Dockerfile文件,注释第22行，并解注释第24、25行
+2. 申请域名证书，具体参考[Nginx 配置 SSL 证书 + 搭建 HTTPS 网站教程](https://s.how/nginx-ssl/)
+3. 添加自己的域名证书到该目录下
+
+```shell
+cd docker-google-mirror
+cp ~/ssl.csr domain.csr
+cp ~/ssl.key.unsecure domain.key.unsecure
+docker build -t google-mirror .
+docker run -d -p 80:80 -p 443:443 google-mirror
+```
+
+去除证书phrase的命令：
+
+```shell
+openssl rsa -in ssl.key -out ssl.key.unsecure
+```

@@ -20,6 +20,9 @@ RUN apk add --update git openssl-dev pcre-dev zlib-dev wget build-base && \
     rm -rf /var/cache/apk/*
 
 ADD nginx.conf /opt/nginx/conf/nginx.conf
+#如果需要https支持则注释上一行并解注释下两行
+#ADD nginx-https.conf /opt/nginx/conf/nginx.conf
+#ADD domain.csr domain.key.unsecure /etc/ssl/private/
 
 EXPOSE 80 443
 CMD ["/opt/nginx/sbin/nginx", "-g", "daemon off;"]
