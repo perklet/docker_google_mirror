@@ -13,7 +13,7 @@ docker run -d -p 80:80 google-mirror
 配置https
 
 1. 编辑Dockerfile文件,注释第22行，并解注释第24、25行
-2. 申请域名证书，具体参考[Nginx 配置 SSL 证书 + 搭建 HTTPS 网站教程](https://s.how/nginx-ssl/)
+2. 申请域名证书，具体参考[Get Https For Free](https://gethttpsforfree.com/)
 3. 添加自己的域名证书到该目录下
 
 ```shell
