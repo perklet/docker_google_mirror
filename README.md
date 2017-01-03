@@ -18,14 +18,12 @@ docker run -d -p 80:80 google-mirror
 
 ```shell
 cd docker-google-mirror
-cp ~/ssl.csr domain.csr
-cp ~/ssl.key.unsecure domain.key.unsecure
+cp ~/chained.pem ~/domain.key ~/dhparam.pem . # 把对应文件拷过来
 docker build -t google-mirror .
 docker run -d -p 80:80 -p 443:443 google-mirror
 ```
 
-去除证书phrase的命令：
+致谢
+------
 
-```shell
-openssl rsa -in ssl.key -out ssl.key.unsecure
-```
+其实这只是强大的[Google Filter Module](https://github.com/cuber/ngx_http_google_filter_module)的一个容器而已啦
