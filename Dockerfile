@@ -1,9 +1,10 @@
-FROM alpine:3.2
+FROM alpine:3.6
 MAINTAINER Yifei Kong <kong@yifei.me>
 
 ENV NGINX_VER 1.10.0
 
-RUN apk add --update git openssl-dev pcre-dev zlib-dev wget build-base && \
+# install nginx with google mirror module
+RUN apk add --update git openssl-dev pcre-dev zlib-dev wget build-base certbot && \
     mkdir src && cd src && \
     wget http://nginx.org/download/nginx-${NGINX_VER}.tar.gz && \
     tar xzf nginx-${NGINX_VER}.tar.gz && \
@@ -19,12 +20,17 @@ RUN apk add --update git openssl-dev pcre-dev zlib-dev wget build-base && \
     rm -rf /src && \
     rm -rf /var/cache/apk/*
 
-#ADD nginx.conf /opt/nginx/conf/nginx.conf
-#如果需要https支持则注释上一行并解注释下两行
-ADD nginx-https.conf /opt/nginx/conf/nginx.conf
-ADD chained.pem /etc/ssl/certs/
-ADD domain.key /etc/ssl/private/
-ADD dhparam.pem /etc/ssl/certs/
+# add config files
+COPY ssl.conf /opt/nginx/conf/ssl.conf
+COPY letsencrypt.conf /opt/nginx/conf/letsencrypt.conf
+COPY nginx_http_only.conf /opt/nginx/conf/nginx_http_only.conf
+COPY nginx.conf /opt/nginx/conf/nginx.conf
+COPY start.sh /start.sh
+
+# set up renew cron jobs
+RUN echo '8 0 * * * certbot renew --noninteractive --renew-hook "/opt/nginx/sbin/nginx -s reload" > /dev/null 2>&1' > /crontab
 
 EXPOSE 80 443
-CMD ["/opt/nginx/sbin/nginx", "-g", "daemon off;"]
+
+# start nginx and cron in the background
+CMD ["/start.sh"]
