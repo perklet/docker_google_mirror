@@ -28,7 +28,7 @@ COPY nginx.conf /opt/nginx/conf/nginx.conf
 COPY start.sh /start.sh
 
 # set up renew cron jobs
-RUN echo '8 0 * * * certbot renew --noninteractive --renew-hook "/opt/nginx/sbin/nginx -s reload" > /dev/null 2>&1' > /crontab
+RUN echo '8 0 * * * certbot renew --noninteractive --renew-hook "/opt/nginx/sbin/nginx -s reload" > /dev/null 2>&1' > /etc/crontabs/root
 
 EXPOSE 80 443
 
